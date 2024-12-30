@@ -19,9 +19,12 @@ const db = new pg.Client({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-db.connect();
+await db.connect();
 
 function generateReferralCode() {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -155,4 +158,7 @@ app.get("/user-profile", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/ping", (req, res) => {
+  res.status(200).send("Pong");
+});
 app.listen(process.env.PORT);
