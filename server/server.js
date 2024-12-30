@@ -7,11 +7,17 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(cors());
+app.use(express.static(path.join(__dirname, "build")));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
 
 const db = new pg.Client({
   user: process.env.DB_USER,
@@ -161,4 +167,9 @@ app.get("/user-profile", authenticateToken, async (req, res) => {
 app.get("/ping", (req, res) => {
   res.status(200).send("Pong");
 });
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 app.listen(process.env.PORT);

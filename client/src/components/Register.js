@@ -30,7 +30,7 @@ const Register = () => {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:3000/register", form);
+      const res = await axios.post("/register", form);
       if (res.status === 201) {
         navigate(-1);
       }

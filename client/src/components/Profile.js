@@ -11,7 +11,7 @@ export default function Profiles() {
         return;
       }
       try {
-        const res = await axios.get("http://localhost:3000/user-profile", {
+        const res = await axios.get("/user-profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setData(res.data);
