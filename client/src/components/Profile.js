@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function Profiles() {
   const [data, setData] = useState(null);
+  const [refCode, setRefCode] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,7 +15,8 @@ export default function Profiles() {
         const res = await axios.get("/user-profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setData(res.data);
+        setData(res?.data?.userResult);
+        setRefCode(res?.data?.referralCode);
       } catch (err) {}
     };
 
@@ -22,6 +24,7 @@ export default function Profiles() {
   }, []);
 
   console.log(data);
+  console.log(refCode);
 
   function getDateAndTime(timestamp) {
     const dateObject = new Date(timestamp);
@@ -37,6 +40,7 @@ export default function Profiles() {
       {data && data.length > 0 ? (
         <>
           <h1>Users registered using your referral code</h1>
+          {refCode && refCode[0] && <h3>Your referral code: {refCode}</h3>}
           <table className="ref-table">
             <thead>
               <tr>
@@ -62,7 +66,10 @@ export default function Profiles() {
           </table>
         </>
       ) : (
-        <h1>No users registered using your referral code</h1>
+        <>
+          <h1>No users registered using your referral code</h1>
+          <h3>Your referral code: {refCode}</h3>
+        </>
       )}
     </div>
   );
