@@ -156,8 +156,15 @@ app.get("/user-profile", authenticateToken, async (req, res) => {
       "SELECT r.referee_id, u.name, u.email, u.created_at FROM referrals r JOIN users u ON r.referee_id = u.id WHERE r.referrer_id = $1",
       [userId]
     );
+    const referralCode = await db.query(
+      "SELECT u.referral_code FROM users u WHERE u.id = $1",
+      [userId]
+    );
     console.log(userResult.rows);
-    return res.status(200).json(userResult.rows);
+    return res.status(200).json({
+      userResult: userResult.rows,
+      referralCode: referralCode.rows[0].referral_code,
+    });
   } catch (err) {
     console.error("Error fetching user data:", err);
     return res.status(500).json({ error: "Error fetching data" });
